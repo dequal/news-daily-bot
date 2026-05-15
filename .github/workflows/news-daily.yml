@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install feedparser html2text
+          pip install feedparser deep-translator
       - name: Run script
         env:
           SMTP_SERVER: smtp.qq.com
