@@ -8,15 +8,23 @@ from datetime import datetime
 
 # 你要的新闻源
 RSS_SOURCES = {
+    # 主流新闻
     "纽约时报": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
     "华盛顿邮报": "https://feeds.washingtonpost.com/rss/headlines",
-    "华尔街日报": "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
     "美联社": "https://apnews.com/rss/ap-top-news",
     "CNN": "https://rss.cnn.com/rss/cnn_topstories.rss",
-    "彭博": "https://www.bloomberg.com/feed/rss",
+    # 金融财经
+    "经济学人": "https://www.economist.com/rss/economics_finance.xml",
+    "金融时报": "https://www.ft.com/rss?format=xml",
+    "彭博社": "https://www.bloomberg.com/feed/rss",
+    "路透社财经": "https://feeds.reuters.com/reuters/businessNews",
+    "华尔街日报财经": "https://feeds.a.dj.com/rss/RSSMoneyInvesting.xml",
+    "MarketWatch": "https://feeds.marketwatch.com/marketwatch/topstories/",
+    "CNBC": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+    "Seeking Alpha": "https://seekingalpha.com/feed",
 }
 
-MAX_PER_SOURCE = 8  # 每个源取最新8条
+MAX_PER_SOURCE = 5  # 每个源取最新5条
 
 # 清理 HTML 标签
 def strip_html(text):
@@ -58,8 +66,26 @@ def translate_articles(articles):
 
 def generate_html(articles):
     today = datetime.now().strftime("%Y-%m-%d")
-    html = f"<h2>📰 每日美国权威新闻简报 {today}</h2>"
+    html = f"<h2>📰 每日新闻+金融简报 {today}</h2>"
     html += "<p>由 阿尔法的1号机器人 自动生成 · 仅供参考</p><hr>"
+    
+    # 分类：新闻 vs 金融
+    news_sources = ["纽约时报", "华盛顿邮报", "美联社", "CNN"]
+    finance_sources = ["经济学人", "金融时报", "彭博社", "路透社财经", "华尔街日报财经", "MarketWatch", "CNBC", "Seeking Alpha"]
+    
+    html += "<h3>📰 综合新闻</h3>"
+    for art in articles:
+        if art['source'] in news_sources:
+            html += f'''<p><strong>【{art['source']}】</strong><br>
+<a href="{art['link']}" style="color:#1a73e8;">{art['title_cn']}</a><br>
+<span style="color:#666;font-size:13px;">{art['summary_cn']}</span></p><hr style="border:none;border-top:1px solid #eee;">'''
+    
+    html += "<h3>💰 金融财经</h3>"
+    for art in articles:
+        if art['source'] in finance_sources:
+            html += f'''<p><strong>【{art['source']}】</strong><br>
+<a href="{art['link']}" style="color:#1a73e8;">{art['title_cn']}</a><br>
+<span style="color:#666;font-size:13px;">{art['summary_cn']}</span></p><hr style="border:none;border-top:1px solid #eee;">'''
 
     for art in articles:
         html += f"""
@@ -71,7 +97,7 @@ def generate_html(articles):
 
 def send_email(html_content):
     msg = MIMEText(html_content, "html", "utf-8")
-    msg["Subject"] = "📰 每日美国新闻简报"
+    msg["Subject"] = "📰 每日新闻+金融简报"
     msg["From"] = os.environ["SMTP_USER"]
     msg["To"] = os.environ["TO_EMAIL"]
 
