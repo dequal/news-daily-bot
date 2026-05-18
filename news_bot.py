@@ -99,11 +99,16 @@ def send_email(html_content):
     msg = MIMEText(html_content, "html", "utf-8")
     msg["Subject"] = "📰 每日新闻+金融简报"
     msg["From"] = os.environ["SMTP_USER"]
-    msg["To"] = os.environ["TO_EMAIL"]
+    
+    # 支持多个收件人（逗号分隔）
+    to_emails = [e.strip() for e in os.environ["TO_EMAIL"].split(",")]
+    msg["To"] = ", ".join(to_emails)
 
     with smtplib.SMTP_SSL(os.environ["SMTP_SERVER"], int(os.environ["SMTP_PORT"])) as server:
         server.login(os.environ["SMTP_USER"], os.environ["SMTP_PASS"])
         server.send_message(msg)
+    
+    print(f"✅ 已发送至: {', '.join(to_emails)}")
 
 if __name__ == "__main__":
     print("📡 正在抓取新闻...")
