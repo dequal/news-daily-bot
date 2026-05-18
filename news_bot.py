@@ -97,7 +97,7 @@ def generate_html(articles):
 
 def send_email(html_content):
     msg = MIMEText(html_content, "html", "utf-8")
-    msg["Subject"] = "📰 （国际版）（国际版）每日新闻+金融简报"
+    msg["Subject"] = "📰 （国际版）每日新闻+金融简报"
     msg["From"] = os.environ["SMTP_USER"]
     
     # 支持多个收件人（逗号分隔）
