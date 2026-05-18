@@ -66,7 +66,7 @@ def translate_articles(articles):
 
 def generate_html(articles):
     today = datetime.now().strftime("%Y-%m-%d")
-    html = f"<h2>📰 每日新闻+金融简报 {today}</h2>"
+    html = f"<h2>📰 （国际版）每日新闻+金融简报 {today}</h2>"
     html += "<p>由 阿尔法的1号机器人 自动生成 · 仅供参考</p><hr>"
     
     # 分类：新闻 vs 金融
@@ -97,7 +97,7 @@ def generate_html(articles):
 
 def send_email(html_content):
     msg = MIMEText(html_content, "html", "utf-8")
-    msg["Subject"] = "📰 每日新闻+金融简报"
+    msg["Subject"] = "📰 （国际版）（国际版）每日新闻+金融简报"
     msg["From"] = os.environ["SMTP_USER"]
     
     # 支持多个收件人（逗号分隔）
